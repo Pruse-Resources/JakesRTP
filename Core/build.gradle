@@ -36,6 +36,13 @@ artifacts {
     archives shadowJar
 }
 
+tasks {
+    shadowJar {
+        archiveFileName.set("${rootProject.name}-${project.version}.jar")
+    }
+}
+
+
 publishing {
     publications {
         maven(MavenPublication) {
