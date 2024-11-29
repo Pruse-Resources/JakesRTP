@@ -4,14 +4,13 @@ subprojects {
     apply plugin: 'java-library'
 
     group = 'biz.donvi'
-    project.version = '0.14.9'
+    project.version = '0.15'
 
-    sourceCompatibility = 16
-    targetCompatibility = 16
+    sourceCompatibility = 21
+    targetCompatibility = 21
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-
     }
 
     repositories {

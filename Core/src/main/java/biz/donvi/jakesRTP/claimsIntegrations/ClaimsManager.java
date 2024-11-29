@@ -87,17 +87,9 @@ public class ClaimsManager {
             } else return false;
         });
 
-        generalPluginLoader("lands","Lands",(pluginName) -> {
-            Plugin plugin;
-            if ((plugin = tryGetPlugin(pluginName)) != null) {
-                restrictors.add(new LrLands(plugin,ownerPlugin));
-                return true;
-            }else return false;
-        });
-
         // End support additions.
         logger.log(Level.INFO, "Loaded support for " + restrictors.size() + " compatible land-claim type plugins.");
-        return restrictors.toArray(LocationRestrictor[]::new);
+        return restrictors.toArray(new LocationRestrictor[0]);
     }
 
     /**

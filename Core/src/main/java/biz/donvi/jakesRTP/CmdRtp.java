@@ -1,6 +1,9 @@
 package biz.donvi.jakesRTP;
 
+import biz.donvi.jakesRTP.event.RandomTeleportCancelEvent;
+import biz.donvi.jakesRTP.event.RandomTeleportEvent;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -76,9 +79,17 @@ public class CmdRtp implements TabExecutor {
             private final boolean warmup = calculatedWarmup;
             private final long startTime = System.currentTimeMillis();
             private int done = 0;
+            private boolean firstRun = true;
 
             @Override
             public void run() {
+                if (firstRun && warmup) {
+                    Bukkit.getPluginManager().callEvent(new RandomTeleportEvent(player, rtpProfile.warmup));
+                    firstRun = false;
+                    if (!rtpProfile.warmupCountDown) {
+                        countDown();
+                    }
+                }
                 // The annoying error message, lets hope we never need use this...
                 if (done > 1) taskError();
                     // If There should be no warmup, we teleport the user immediately.
@@ -142,6 +153,7 @@ public class CmdRtp implements TabExecutor {
 
             private void cancel() {
                 player.sendMessage(Messages.WARMUP_CANCEL_BECAUSE_MOVE.format());
+                Bukkit.getPluginManager().callEvent(new RandomTeleportCancelEvent(player));
                 cancelTask();
             }
 

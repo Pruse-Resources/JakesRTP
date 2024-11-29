@@ -1,14 +1,9 @@
 package biz.donvi.jakesRTP;
 
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
 
 public class SafeLocationUtils {
 
@@ -19,25 +14,7 @@ public class SafeLocationUtils {
     static {
         util = new SafeLocationUtils();
         Class<SafeLocationUtils_Patch> patchClass = null;
-        SafeLocationUtils_Patch patchInstance = null;
-        try {
-            if (PaperLib.getMinecraftVersion() <= 12) {
-                //noinspection unchecked
-                patchClass = (Class<SafeLocationUtils_Patch>) Class
-                    .forName("biz.donvi.jakesRTP.SafeLocationUtils_12")
-                    .asSubclass(SafeLocationUtils_Patch.class);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (patchClass != null)
-            try {
-                patchInstance = patchClass.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
-        else patchInstance = new SafeLocationUtils_Patch.BlankPatch();
-        patches = patchInstance;
+        patches = new SafeLocationUtils_Patch.BlankPatch();
     }
 
 
@@ -61,7 +38,7 @@ public class SafeLocationUtils {
             case FERN:
             case LARGE_FERN:
             case VINE:
-            case GRASS:
+            case SHORT_GRASS:
             case TALL_GRASS:
             case GLOW_LICHEN:
             case MOSS_CARPET:
