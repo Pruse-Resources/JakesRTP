@@ -155,6 +155,17 @@ public class RandomTeleportAction {
     }
     //</editor-fold>
 
+    public Location generateLandingLocation() throws JrtpBaseException {
+        if (landingLoc == null) {
+            landingLoc = randomTeleporter.getRtpLocation(
+                rtpProfile,
+                callFromLoc,
+                takeFromQueue
+            );
+        }
+        return landingLoc;
+    }
+
     /**
      * This is everything that has to be done <i>before</i> the actual teleport happens. Mainly getting the point,
      * and filling in placeholders for user commands.
@@ -166,10 +177,7 @@ public class RandomTeleportAction {
         if (used) throw new RandomTeleportActionAlreadyUsedException();
         else used = true;
         if (timed) timeStart = System.currentTimeMillis();
-        landingLoc = randomTeleporter.getRtpLocation(
-            rtpProfile,
-            callFromLoc,
-            takeFromQueue);
+        if (landingLoc == null) generateLandingLocation();
         this.player = player;
         //<editor-fold desc="setPlaceholders();">
         if (rtpProfile.commandsToRun.length != 0) {

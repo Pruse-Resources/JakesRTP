@@ -78,13 +78,31 @@ public class CmdRtp implements TabExecutor {
             private final Location startLoc = player.getLocation().clone();
             private final boolean warmup = calculatedWarmup;
             private final long startTime = System.currentTimeMillis();
+            private final RandomTeleportAction rtpAction = new RandomTeleportAction(
+                    randomTeleporter,
+                    rtpProfile,
+                    player.getLocation(),
+                    true,
+                    true,
+                    randomTeleporter.logRtpOnCommand, "Rtp-from-command triggered!"
+            );
             private int done = 0;
             private boolean firstRun = true;
 
             @Override
             public void run() {
                 if (firstRun && warmup) {
-                    Bukkit.getPluginManager().callEvent(new RandomTeleportEvent(player, rtpProfile.warmup));
+                    try {
+                        Bukkit.getPluginManager().callEvent(
+                                new RandomTeleportEvent(
+                                        player,
+                                        rtpAction.generateLandingLocation(),
+                                        rtpProfile.warmup
+                                )
+                        );
+                    } catch (JrtpBaseException e) {
+                        throw new RuntimeException(e);
+                    }
                     firstRun = false;
                     if (!rtpProfile.warmupCountDown) {
                         countDown();
@@ -121,14 +139,6 @@ public class CmdRtp implements TabExecutor {
                         return;
                     }
                     // Do the teleport action
-                    var rtpAction = new RandomTeleportAction(
-                        randomTeleporter,
-                        rtpProfile,
-                        player.getLocation(),
-                        true,
-                        true,
-                        randomTeleporter.logRtpOnCommand, "Rtp-from-command triggered!"
-                    );
                     if (rtpProfile.preferSyncTpOnCommand)
                          rtpAction.teleportSync (player);
                     else rtpAction.teleportAsync(player);
